@@ -45,7 +45,7 @@ public class PolyLine extends Curve {
 
 	    if(backgroundPolygon)
         {
-            final Double alpha = 0.5;
+            final Double alpha = 0.01;
 
             for(Point2D n : finalArray)
             {
@@ -93,32 +93,67 @@ public class PolyLine extends Curve {
            for(int i=0; i<a;i++)
            {
                slopes[i]=(bgCoordsMatrix[i][3]-bgCoordsMatrix[i][1])/(bgCoordsMatrix[i][2]-bgCoordsMatrix[i][0]);
-               System.out.println(slopes[i]);
+//               System.out.println(slopes[i]);
            }
 
            Double[] shifts = new Double[a];
            for(int i=0; i<a;i++)
            {
                shifts[i]=bgCoordsMatrix[i][1]-slopes[i]*bgCoordsMatrix[i][0];
-               System.out.println(shifts[i]);
+//               System.out.println(shifts[i]);
            }
            Double[][] modifiedShifts = new Double[a][2];
             for(int i=0; i<a;i++)
             {
                 modifiedShifts[i][0]=(1/(slopes[i]))*(-bgCoordsMatrix[i][0])+bgCoordsMatrix[i][1];
                 modifiedShifts[i][1]=(1/(slopes[i]))*(-bgCoordsMatrix[i][2])+bgCoordsMatrix[i][3];
-                System.out.println(modifiedShifts[i][0]);
-                System.out.println(modifiedShifts[i][1]);
+//                System.out.println(modifiedShifts[i][0]);
+//                System.out.println(modifiedShifts[i][1]);
+            }
+
+            Double[][] finished = new Double[a][8];
+
+            for(int k=0; k<a;k++)
+            {
+                Double x1 =Math.round(modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+                Double x2 =(modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+                Double x3 =(modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+                Double x4 =(modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+                Double y1=slopes[k]*x1+shifts[k];
+                Double y2=slopes[k]*x2+shifts[k];
+                Double y3=slopes[k]*x3+shifts[k];
+                Double y4=slopes[k]*x4+shifts[k];
+                finished[k][0]=x1;
+                finished[k][1]=y1;
+                finished[k][2]=x2;
+                finished[k][3]=y2;
+                finished[k][4]=x3;
+                finished[k][5]=y3;
+                finished[k][6]=x4;
+                finished[k][7]=y4;
+            }
+
+            for (int i=0; i<a;i++)
+            {
+                for (int j=0; j<8;j++)
+                {
+                    nameObstacle = nameObstacle + finished[i][j] + " ";
+                }
+                nameObstacle = nameObstacle + "\n";
             }
 
         }
+        else
+        {
+            for(Point2D n : finalArray)
+            {
+                nameObstacle = nameObstacle + n.getX() + " " + n.getY()+ " ";
+            }
 
-		for(Point2D n : finalArray)
-		{
-			nameObstacle = nameObstacle + n.getX() + " " + n.getY()+ " ";
-		}
+            nameObstacle = nameObstacle+"\n";
+        }
 
-		nameObstacle = nameObstacle+"\n";
+
 
 
 		if (closed == true && super.isClosed() == false){//close
