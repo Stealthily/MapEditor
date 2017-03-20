@@ -45,19 +45,27 @@ public class PolyLine extends Curve {
 
 	    if(backgroundPolygon)
         {
+            final Double alpha = 0.5;
+
             for(Point2D n : finalArray)
             {
                 backgroundCoords = backgroundCoords + n.getX() + " " + n.getY()+ " ";
             }
-            String[] tmpbgCoordsArray = backgroundCoords.split(" ");
+            String[] tmpbgCoordsAr = backgroundCoords.split(" ");
+            Double[] tmpbgCoordsArray = new Double[tmpbgCoordsAr.length];
+
+            for(int i=0; i<tmpbgCoordsAr.length;i++)
+            {
+                tmpbgCoordsArray[i]=Double.parseDouble(tmpbgCoordsAr[i]);
+            }
             int a = tmpbgCoordsArray.length/2;
-           String[][] bgCoordsMatrix = new String[a][4];
+           Double[][] bgCoordsMatrix = new Double[a][4];
            int ref =0;
            for(int i=0; i<bgCoordsMatrix.length; i++)
            {
                bgCoordsMatrix[i][0]=tmpbgCoordsArray[ref];
                bgCoordsMatrix[i][1]=tmpbgCoordsArray[ref+1];
-               if(ref +3  > a)
+               if(ref > a)
                {
                    bgCoordsMatrix[i][2]=tmpbgCoordsArray[0];
                    bgCoordsMatrix[i][3]=tmpbgCoordsArray[1];
@@ -72,13 +80,37 @@ public class PolyLine extends Curve {
            }
 
 
-           for(int i=0;i<bgCoordsMatrix.length;i++)
+//           for(int i=0;i<bgCoordsMatrix.length;i++)
+//           {
+//               for(int j=0;j<4;j++)
+//               {
+//                   System.out.println(bgCoordsMatrix[i][j]);
+//               }
+//           }
+
+            Double[] slopes = new Double[a];
+
+           for(int i=0; i<a;i++)
            {
-               for(int j=0;j<4;j++)
-               {
-                   System.out.println(bgCoordsMatrix[i][j]);
-               }
+               slopes[i]=(bgCoordsMatrix[i][3]-bgCoordsMatrix[i][1])/(bgCoordsMatrix[i][2]-bgCoordsMatrix[i][0]);
+               System.out.println(slopes[i]);
            }
+
+           Double[] shifts = new Double[a];
+           for(int i=0; i<a;i++)
+           {
+               shifts[i]=bgCoordsMatrix[i][1]-slopes[i]*bgCoordsMatrix[i][0];
+               System.out.println(shifts[i]);
+           }
+           Double[][] modifiedShifts = new Double[a][2];
+            for(int i=0; i<a;i++)
+            {
+                modifiedShifts[i][0]=(1/(slopes[i]))*(-bgCoordsMatrix[i][0])+bgCoordsMatrix[i][1];
+                modifiedShifts[i][1]=(1/(slopes[i]))*(-bgCoordsMatrix[i][2])+bgCoordsMatrix[i][3];
+                System.out.println(modifiedShifts[i][0]);
+                System.out.println(modifiedShifts[i][1]);
+            }
+
         }
 
 		for(Point2D n : finalArray)
@@ -122,7 +154,7 @@ public class PolyLine extends Curve {
 		this.length = NumericalApproximation.calcArcLength(this);
 		if(backgroundPolygon)
         {
-//            System.out.println(backgroundCoords);
+
         }
 
 	}
