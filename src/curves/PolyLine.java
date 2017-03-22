@@ -16,7 +16,7 @@ public class PolyLine extends Curve {
 
 	protected PolyLine(Point2D point, String name) {
         super(name);
-        if(name.equalsIgnoreCase("sal"))
+        if(name.equalsIgnoreCase("gen"))
         {
            backgroundPolygon=true;
         }
@@ -125,17 +125,22 @@ public class PolyLine extends Curve {
 
             for(int k=0; k<a;k++)
             {
-                Double x1 =Math.round(((modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-//                Double x2 =(modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
-                Double x2 =Math.round(((modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-//                Double x3 =(modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
-                Double x3 =Math.round(((modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-//                Double x4 =(modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
-                Double x4 =Math.round(((modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-                Double y1=Math.round((slopes[k]*x1+shifts[k])*100d)/100d;
-                Double y2=Math.round((slopes[k]*x2+shifts[k])*100d)/100d;
-                Double y3=Math.round((slopes[k]*x3+shifts[k])*100d)/100d;
-                Double y4=Math.round((slopes[k]*x4+shifts[k])*100d)/100d;
+//                Double x1 =Math.round(((modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
+                Double x1 =(modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+                Double x2 =(modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+//                Double x2 =Math.round(((modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
+                Double x3 =(modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+//                Double x3 =Math.round(((modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
+                Double x4 =(modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+//                Double x4 =Math.round(((modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
+//                Double y1=Math.round((slopes[k]*x1+shifts[k])*100d)/100d;
+//                Double y2=Math.round((slopes[k]*x2+shifts[k])*100d)/100d;
+//                Double y3=Math.round((slopes[k]*x3+shifts[k])*100d)/100d;
+//                Double y4=Math.round((slopes[k]*x4+shifts[k])*100d)/100d;
+                Double y1=((slopes[k]*x1+shifts[k]));
+                Double y2=((slopes[k]*x2+shifts[k]));
+                Double y3=((slopes[k]*x3+shifts[k]));
+                Double y4=((slopes[k]*x4+shifts[k]));
                 //(double)Math.round(value * 100000d) / 100000d
 
 
