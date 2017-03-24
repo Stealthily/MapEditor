@@ -46,7 +46,7 @@ public class PolyLine extends Curve {
 	    if(backgroundPolygon)
 	    //Here we check whether this is the outlying polygon or not
         {
-            final Double alpha = 0.8;
+            final Double alpha = 0.001;
             //This is the parameter responsible for the width of the rectangle
 
             for(Point2D n : finalArray)
@@ -76,7 +76,7 @@ public class PolyLine extends Curve {
            {
                bgCoordsMatrix[i][0]=tmpbgCoordsArray[ref];
                bgCoordsMatrix[i][1]=tmpbgCoordsArray[ref+1];
-               if(ref > a)
+               if(ref+3>=tmpbgCoordsArray.length)
                {
                    bgCoordsMatrix[i][2]=tmpbgCoordsArray[0];
                    bgCoordsMatrix[i][3]=tmpbgCoordsArray[1];
@@ -86,7 +86,7 @@ public class PolyLine extends Curve {
                    bgCoordsMatrix[i][2]=tmpbgCoordsArray[ref+2];
                    bgCoordsMatrix[i][3]=tmpbgCoordsArray[ref+3];
                }
-
+//               System.out.println("x1= " + bgCoordsMatrix[i][0]+ " y1= " + bgCoordsMatrix[i][1] + " x2= " + bgCoordsMatrix[i][2] + " y2 = "+ bgCoordsMatrix[i][3]);
                ref=ref+2;
            }
            //Here we basically fill the array so that each first point is the ending point of the previous line in the matrix, except for the case at the end, where the ending point is just the beginning of the first line since they are linked (closed shape)
@@ -101,58 +101,85 @@ public class PolyLine extends Curve {
 //               System.out.println(slopes[i]);
            }
 
-           Double[] shifts = new Double[a];
 
-           //This contains all the "b"s of the linear functions
-           for(int i=0; i<a;i++)
-           {
-               shifts[i]=bgCoordsMatrix[i][1]-slopes[i]*bgCoordsMatrix[i][0];
-//               System.out.println(shifts[i]);
-           }
-           Double[][] modifiedShifts = new Double[a][2];
+//           Double[] shifts = new Double[a];
+//
+//           This contains all the "b"s of the linear functions
+//           for(int i=0; i<a;i++)
+//           {
+//               shifts[i]=bgCoordsMatrix[i][1]-slopes[i]*bgCoordsMatrix[i][0];
+////               System.out.println(shifts[i]);
+//           }
+//           Double[][] modifiedShifts = new Double[a][2];
 
            //This contains all the b[1] and b[2] of the perpendicular functions (given by a^=1x+b[1] or [2]
 
-            for(int i=0; i<a;i++)
-            {
-                modifiedShifts[i][0]=(1/(slopes[i]))*(-bgCoordsMatrix[i][0])+bgCoordsMatrix[i][1];
-                modifiedShifts[i][1]=(1/(slopes[i]))*(-bgCoordsMatrix[i][2])+bgCoordsMatrix[i][3];
+//            for(int i=0; i<a;i++)
+//            {
+//                modifiedShifts[i][0]=(1/(slopes[i]))*(-bgCoordsMatrix[i][0])+bgCoordsMatrix[i][1];
+//                modifiedShifts[i][1]=(1/(slopes[i]))*(-bgCoordsMatrix[i][2])+bgCoordsMatrix[i][3];
 //                System.out.println(modifiedShifts[i][0]);
 //                System.out.println(modifiedShifts[i][1]);
-            }
+//            }
 
             Double[][] finished = new Double[a][8];
 
-            for(int k=0; k<a;k++)
-            {
-//                Double x1 =Math.round(((modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-                Double x1 =(modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
-                Double x2 =(modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
-//                Double x2 =Math.round(((modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-                Double x3 =(modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
-//                Double x3 =Math.round(((modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-                Double x4 =(modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
-//                Double x4 =Math.round(((modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100d)/100d;
-//                Double y1=Math.round((slopes[k]*x1+shifts[k])*100d)/100d;
-//                Double y2=Math.round((slopes[k]*x2+shifts[k])*100d)/100d;
-//                Double y3=Math.round((slopes[k]*x3+shifts[k])*100d)/100d;
-//                Double y4=Math.round((slopes[k]*x4+shifts[k])*100d)/100d;
-                Double y1=((slopes[k]*x1+shifts[k]));
-                Double y2=((slopes[k]*x2+shifts[k]));
-                Double y3=((slopes[k]*x3+shifts[k]));
-                Double y4=((slopes[k]*x4+shifts[k]));
+           for(int k=0; k<a;k++) {
+
+               if(Math.abs(slopes[k])>1)
+               {
+                   finished[k][0]=bgCoordsMatrix[k][0]-alpha;
+                   finished[k][1]=bgCoordsMatrix[k][1];
+                   finished[k][2]=bgCoordsMatrix[k][0]+alpha;
+                   finished[k][3]=bgCoordsMatrix[k][1];
+                   finished[k][4]=bgCoordsMatrix[k][2]+alpha;
+                   finished[k][5]=bgCoordsMatrix[k][3];
+                   finished[k][6]=bgCoordsMatrix[k][2]-alpha;
+                   finished[k][7]=bgCoordsMatrix[k][3];
+               }
+               else
+               {
+                   finished[k][0]=bgCoordsMatrix[k][0];
+                   finished[k][1]=bgCoordsMatrix[k][1]-alpha;
+                   finished[k][2]=bgCoordsMatrix[k][2];
+                   finished[k][3]=bgCoordsMatrix[k][3]-alpha;
+                   finished[k][4]=bgCoordsMatrix[k][2];
+                   finished[k][5]=bgCoordsMatrix[k][3]+alpha;
+                   finished[k][6]=bgCoordsMatrix[k][0];
+                   finished[k][7]=bgCoordsMatrix[k][1]+alpha;
+               }
+           }
+
+//            for(int k=0; k<a;k++)
+//            {
+////                Double x1 =Math.round(((modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100000d)/100000d;
+//                Double x1 =(modifiedShifts[k][0]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+//                Double x2 =(modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+////                Double x2 =Math.round(((modifiedShifts[k][0]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100000d)/100000d;
+//                Double x3 =(modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k]));
+////                Double x3 =Math.round(((modifiedShifts[k][1]-shifts[k]-alpha)/(slopes[k]-(1/slopes[k])))*100000d)/100000d;
+//                Double x4 =(modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k]));
+////                Double x4 =Math.round(((modifiedShifts[k][1]-shifts[k]+alpha)/(slopes[k]-(1/slopes[k])))*100000d)/100000d;
+////                Double y1=Math.round((slopes[k]*x1+shifts[k])*100000d)/100000d;
+////                Double y2=Math.round((slopes[k]*x2+shifts[k])*100000d)/100000d;
+////                Double y3=Math.round((slopes[k]*x3+shifts[k])*100000d)/100000d;
+////                Double y4=Math.round((slopes[k]*x4+shifts[k])*100000d)/100000d;
+//                Double y1=((slopes[k]*x1+shifts[k]));
+//                Double y2=((slopes[k]*x2+shifts[k]));
+//                Double y3=((slopes[k]*x3+shifts[k]));
+//                Double y4=((slopes[k]*x4+shifts[k]));
                 //(double)Math.round(value * 100000d) / 100000d
 
 
-                finished[k][0]=x1;
-                finished[k][1]=y1;
-                finished[k][2]=x2;
-                finished[k][3]=y2;
-                finished[k][4]=x3;
-                finished[k][5]=y3;
-                finished[k][6]=x4;
-                finished[k][7]=y4;
-            }
+//                finished[k][0]=x1;
+//                finished[k][1]=y1;
+//                finished[k][2]=x2;
+//                finished[k][3]=y2;
+//                finished[k][4]=x3;
+//                finished[k][5]=y3;
+//                finished[k][6]=x4;
+//                finished[k][7]=y4;
+//            }
 
             for (int i=0; i<a;i++)
             {
