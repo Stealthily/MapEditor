@@ -258,7 +258,7 @@ public class SideBar extends JTabbedPane implements TableModelListener {
         });
 
         controls.add(button);
-        button = new JButton("Help");
+        button = new JButton("Launch the Game");
         button.addActionListener((ActionEvent e) -> {
 
         });
@@ -267,10 +267,10 @@ public class SideBar extends JTabbedPane implements TableModelListener {
         infoText = new JLabel[]{
             new JLabel("Name"),
             new JLabel("Area"),
-            new JLabel("Length"),
-            new JLabel("Number Of control points"),
-            new JLabel("Zoom Level")};
-        info = new JPanel(new GridLayout(6, 0));
+            new JLabel("Length")};
+//            new JLabel("Number Of control points"),
+//            new JLabel("Zoom Level")};
+        info = new JPanel(new GridLayout(4, 0));
         info.setToolTipText("Information about the line");
         for (JLabel infoText1 : infoText) {
             infoText1.setHorizontalAlignment(SwingConstants.CENTER);
